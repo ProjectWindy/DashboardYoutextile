@@ -36,6 +36,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   fl_chart: ^0.69.0
   google_fonts: ^6.2.1
+  dio: ^5.7.0
+  flutter_bloc: ^8.0.1
+  shared_preferences: ^2.0.13
+  image_picker: ^0.8.7+5
 
 dev_dependencies:
   flutter_test:

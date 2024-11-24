@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ipad_dashboard/pages/layout/layout.dart';
 
-import 'core/assets.dart';
-import 'core/colors/color.dart';
+import 'bloc/shipping_unit/shipping_unit_bloc.dart';
 import 'core/themes/theme_data.dart';
 
 void main() {
@@ -12,7 +12,14 @@ void main() {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]).then((_) {
-    runApp(const MyApp());
+    runApp(MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => ShippingUnitBloc(),
+        ),
+      ],
+      child: const MyApp(),
+    ));
   });
   // runApp(const MyApp());
 }
