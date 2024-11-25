@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ipad_dashboard/core/assets.dart';
-import 'package:ipad_dashboard/util/constants.dart';
 
 import '../../../bloc/shipping_unit/shipping_unit_bloc.dart';
 
@@ -17,6 +16,8 @@ class ShipScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<ShipScreen> {
+  bool isActive = true;
+
   @override
   void initState() {
     super.initState();
@@ -50,76 +51,32 @@ class _UserScreenState extends State<ShipScreen> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.add),
+                  label: const Text("Thêm Đơn vị vận chuyển"),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const AddShippingUnitDialog(),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
                 IconButton(
                   icon:
                       const Icon(Icons.filter_alt_outlined, color: Colors.blue),
-                  onPressed: () {},
+                  onPressed: () {
+                    // Implement filter functionality
+                  },
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            // Expanded(
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       color: Colors.white,
-            //       borderRadius: BorderRadius.circular(8),
-            //       border: Border.all(color: const Color(0xFFEEEEEE)),
-            //     ),
-            //     child: SingleChildScrollView(
-            //       scrollDirection: Axis.horizontal,
-            //       child: DataTable(
-            //         headingRowColor: MaterialStateColor.resolveWith(
-            //           (states) => const Color(0xFFFAFAFA),
-            //         ),
-            //         dataRowHeight: 69,
-            //         horizontalMargin: 30,
-            //         columnSpacing: 100,
-            //         columns: const [
-            //           DataColumn(
-            //               label: Text('STT',
-            //                   style: TextStyle(
-            //                       fontSize: 14, fontWeight: FontWeight.bold))),
-            //           DataColumn(
-            //               label: Text('Tên',
-            //                   style: TextStyle(
-            //                       fontSize: 14, fontWeight: FontWeight.bold))),
-            //           DataColumn(
-            //               label: Text('Số Đơn Hàng',
-            //                   style: TextStyle(
-            //                       fontSize: 14, fontWeight: FontWeight.bold))),
-            //           DataColumn(
-            //               label: Text('Tỉ Lệ Hoàn Thành',
-            //                   style: TextStyle(
-            //                       fontSize: 14, fontWeight: FontWeight.bold))),
-            //           DataColumn(
-            //               label: Text('Tình Trạng',
-            //                   style: TextStyle(
-            //                       fontSize: 14, fontWeight: FontWeight.bold))),
-            //           DataColumn(
-            //               label: Text('Thao tác',
-            //                   style: TextStyle(
-            //                       fontSize: 14, fontWeight: FontWeight.bold))),
-            //         ],
-            //         rows: List.generate(
-            //           7,
-            //           (index) => DataRow(
-            //             cells: [
-            //               DataCell(Text('#123')),
-            //               DataCell(
-            //                   Text(index == 1 ? 'VNPost' : "Viettel Post")),
-            //               DataCell(Text('500')),
-            //               DataCell(Text(index == 1 ? '95%' : '90%')),
-            //               DataCell(Text(index == 1 ? 'Hoạt động' : 'Ngưng')),
-            //               DataCell(_buildActions()),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             const Row(
               children: [
                 Expanded(
@@ -128,13 +85,13 @@ class _UserScreenState extends State<ShipScreen> {
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                 )),
-                Expanded(
-                    flex: 2,
-                    child: Center(
-                      child: Text("Hình ảnh",
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold)),
-                    )),
+                // Expanded(
+                //     flex: 2,
+                //     child: Center(
+                //       child: Text("Hình ảnh",
+                //           style: TextStyle(
+                //               fontSize: 14, fontWeight: FontWeight.bold)),
+                //     )),
                 Expanded(
                     flex: 3,
                     child: Center(
@@ -181,20 +138,20 @@ class _UserScreenState extends State<ShipScreen> {
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold)),
                                 )),
-                                Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      height: 30,
-                                      width: 30,
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
-                                      decoration: BoxDecoration(
-                                          color: Colors.grey.shade200,
-                                          image: DecorationImage(
-                                              image: NetworkImage(
-                                                  "${NetworkConstants.urlImage}${unit.image}"),
-                                              fit: BoxFit.fitWidth)),
-                                    )),
+                                // Expanded(
+                                //     flex: 2,
+                                //     child: Container(
+                                //       height: 30,
+                                //       width: 30,
+                                //       margin: const EdgeInsets.symmetric(
+                                //           horizontal: 5, vertical: 5),
+                                //       decoration: BoxDecoration(
+                                //           color: Colors.grey.shade200,
+                                //           image: DecorationImage(
+                                //               image: NetworkImage(
+                                //                   "${NetworkConstants.urlImage}${unit.image}"),
+                                //               fit: BoxFit.fitWidth)),
+                                //     )),
                                 Expanded(
                                     flex: 3,
                                     child: Center(
@@ -247,7 +204,41 @@ class _UserScreenState extends State<ShipScreen> {
                                             color: Colors.red,
                                           ),
                                           onPressed: () {
-                                            // context.read<ShippingUnitCubit>().deleteShippingUnit(unit['uuid']);
+                                            // Hiện dialog xác nhận trước khi xóa
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title:
+                                                    const Text('Xác nhận xóa'),
+                                                content: const Text(
+                                                    'Bạn có chắc chắn muốn xóa đơn vị vận chuyển này?'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                    child: const Text('Hủy'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      context
+                                                          .read<
+                                                              ShippingUnitBloc>()
+                                                          .add(
+                                                            DeleteShippingUnitEvent(
+                                                                uuid:
+                                                                    unit.uuid),
+                                                          );
+                                                      Navigator.pop(context);
+                                                    },
+                                                    style: TextButton.styleFrom(
+                                                      foregroundColor:
+                                                          Colors.red,
+                                                    ),
+                                                    child: const Text('Xóa'),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
                                           },
                                         ),
                                       ],
@@ -362,6 +353,7 @@ class _EditShippingUnitScreenState extends State<EditShippingUnitScreen> {
   final _nameController = TextEditingController();
   final _statusController = TextEditingController();
   File? _selectedImage;
+  bool isActive = true;
 
   Future<void> _pickImage() async {
     final pickedFile =
@@ -376,72 +368,425 @@ class _EditShippingUnitScreenState extends State<EditShippingUnitScreen> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: BlocConsumer<ShippingUnitBloc, ShippingUnitState>(
-          listener: (context, state) {
-            if (state is ShippingUnitSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Đơn vị vận chuyển đã được thêm!")),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(24.0),
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.9,
+            maxWidth: MediaQuery.of(context).size.width * 0.8,
+          ),
+          child: BlocConsumer<ShippingUnitBloc, ShippingUnitState>(
+            listener: (context, state) {
+              if (state is ShippingUnitSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text("Đơn vị vận chuyển đã được thêm!")),
+                );
+                Navigator.of(context).pop();
+              } else if (state is ShippingUnitError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
+                );
+              }
+            },
+            builder: (context, state) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Chỉnh sửa đơn vị vận chuyển",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.close),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.grey.shade100,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      labelText: "Tên đơn vị",
+                      hintText: "Nhập tên đơn vị vận chuyển",
+                      filled: true,
+                      fillColor: Colors.grey.shade50,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            const BorderSide(color: Colors.blue, width: 2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Card(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      side: BorderSide(color: Colors.grey.shade200),
+                    ),
+                    child: CheckboxListTile(
+                      title: const Text(
+                        'Trạng thái hoạt động',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      subtitle: Text(
+                        isActive ? 'Đang hoạt động' : 'Không hoạt động',
+                        style: TextStyle(
+                          color: isActive ? Colors.green : Colors.red,
+                        ),
+                      ),
+                      value: isActive,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isActive = value ?? true;
+                        });
+                      },
+                      activeColor: Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: _selectedImage == null
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.cloud_upload_outlined,
+                                    size: 48, color: Colors.grey.shade400),
+                                const SizedBox(height: 8),
+                                TextButton.icon(
+                                  onPressed: _pickImage,
+                                  icon: const Icon(
+                                      Icons.add_photo_alternate_outlined),
+                                  label: const Text("Chọn hình ảnh"),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.blue,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Stack(
+                            children: [
+                              Image.file(_selectedImage!, fit: BoxFit.cover),
+                              Positioned(
+                                right: 8,
+                                top: 8,
+                                child: IconButton(
+                                  onPressed: () =>
+                                      setState(() => _selectedImage = null),
+                                  icon: const Icon(Icons.close,
+                                      color: Colors.black54),
+                                  style: IconButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    padding: const EdgeInsets.all(4),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 44,
+                    child: ElevatedButton(
+                      onPressed: state is ShippingUnitLoading
+                          ? null
+                          : () async {
+                              final name = _nameController.text.trim();
+                              final status = _statusController.text.trim();
+
+                              if (name.isEmpty ||
+                                  status.isEmpty ||
+                                  _selectedImage == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        "Vui lòng điền đầy đủ thông tin và chọn hình ảnh."),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              final multipartFile =
+                                  await MultipartFile.fromFile(
+                                _selectedImage!.path,
+                                filename: _selectedImage!.path.split('/').last,
+                              );
+
+                              context.read<ShippingUnitBloc>().add(
+                                    AddShippingUnitButtonPressed(
+                                      name: name,
+                                      status: status,
+                                      description: '',
+                                      image: multipartFile,
+                                    ),
+                                  );
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      child: state is ShippingUnitLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text(
+                              "Lưu thay đổi",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                    ),
+                  ),
+                ],
               );
-              Navigator.of(context).pop();
-            } else if (state is ShippingUnitError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
-            }
-          },
-          builder: (context, state) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(onPressed:  () {
-                    Navigator.pop(context);
-                  }, icon: const Icon(Icons.cancel)),
-                ),
-                const Center(
-                  child: Text(
-                    "Chỉnh sửa đơn vị vận chuyển",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AddShippingUnitDialog extends StatefulWidget {
+  const AddShippingUnitDialog({super.key});
+
+  @override
+  State<AddShippingUnitDialog> createState() => _AddShippingUnitDialogState();
+}
+
+class _AddShippingUnitDialogState extends State<AddShippingUnitDialog> {
+  final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  File? _selectedImage;
+  bool isActive = true;
+
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(24.0),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.8,
+            maxHeight: MediaQuery.of(context).size.height * 0.9,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Thêm đơn vị vận chuyển",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.grey.shade100,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: "Tên đơn vị",
+                  hintText: "Nhập tên đơn vị vận chuyển",
+                  filled: true,
+                  fillColor: Colors.grey.shade50,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: Colors.blue, width: 2),
                   ),
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(labelText: "Tên đơn vị"),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _descriptionController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: "Mô tả",
+                  hintText: "Nhập mô tả cho đơn vị vận chuyển",
+                  filled: true,
+                  fillColor: Colors.grey.shade50,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: Colors.blue, width: 2),
+                  ),
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _statusController,
-                  decoration: const InputDecoration(labelText: "Trạng thái"),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(height: 12),
-                _selectedImage == null
-                    ? const Text("Chưa chọn hình ảnh")
-                    : Image.file(_selectedImage!, height: 100),
-                ElevatedButton(
-                  onPressed: _pickImage,
-                  child: const Text("Chọn hình ảnh"),
+                child: _selectedImage == null
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.cloud_upload_outlined,
+                                size: 48, color: Colors.grey.shade400),
+                            const SizedBox(height: 8),
+                            TextButton.icon(
+                              onPressed: _pickImage,
+                              icon: const Icon(
+                                  Icons.add_photo_alternate_outlined),
+                              label: const Text("Chọn hình ảnh"),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.blue,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 12,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Image.file(_selectedImage!, fit: BoxFit.cover),
+                            Positioned(
+                              right: 8,
+                              top: 8,
+                              child: IconButton(
+                                onPressed: () =>
+                                    setState(() => _selectedImage = null),
+                                icon: const Icon(Icons.close),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+              ),
+              const SizedBox(height: 16),
+              Card(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  side: BorderSide(color: Colors.grey.shade200),
                 ),
-                const SizedBox(height: 16),
-                if (state is ShippingUnitLoading)
-                  const CircularProgressIndicator(),
-                ElevatedButton(
+                child: CheckboxListTile(
+                  title: const Text(
+                    'Trạng thái hoạt động',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  subtitle: Text(
+                    isActive ? 'Đang hoạt động' : 'Không hoạt động',
+                    style: TextStyle(
+                      color: isActive ? Colors.green : Colors.red,
+                    ),
+                  ),
+                  value: isActive,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isActive = value ?? true;
+                    });
+                  },
+                  activeColor: Colors.blue,
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                height: 48,
+                child: ElevatedButton(
                   onPressed: () async {
-                    final name = _nameController.text.trim();
-                    final status = _statusController.text.trim();
-
-                    if (name.isEmpty ||
-                        status.isEmpty ||
+                    if (_nameController.text.isEmpty ||
+                        _descriptionController.text.isEmpty ||
                         _selectedImage == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text(
-                              "Vui lòng điền đầy đủ thông tin và chọn hình ảnh."),
+                          content: Text("Vui lòng điền đầy đủ thông tin"),
+                          behavior: SnackBarBehavior.floating,
                         ),
                       );
                       return;
@@ -452,140 +797,39 @@ class _EditShippingUnitScreenState extends State<EditShippingUnitScreen> {
                       filename: _selectedImage!.path.split('/').last,
                     );
 
-                    context.read<ShippingUnitBloc>().add(
-                          AddShippingUnitButtonPressed(
-                            name: name,
-                            status: status,
-                            image: multipartFile,
-                          ),
-                        );
+                    if (mounted) {
+                      context.read<ShippingUnitBloc>().add(
+                            AddShippingUnitButtonPressed(
+                              name: _nameController.text,
+                              description: _descriptionController.text,
+                              image: multipartFile,
+                              status: isActive ? 'active' : 'inactive',
+                            ),
+                          );
+                      Navigator.pop(context);
+                    }
                   },
-                  child: const Text("Lưu"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    "Thêm mới",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
-              ],
-            );
-          },
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-// class AddShippingUnitScreen extends StatefulWidget {
-//   const AddShippingUnitScreen({super.key});
-//
-//   @override
-//   _AddShippingUnitScreenState createState() => _AddShippingUnitScreenState();
-// }
-//
-// class _AddShippingUnitScreenState extends State<AddShippingUnitScreen> {
-//   final TextEditingController _nameController = TextEditingController();
-//   final TextEditingController _statusController = TextEditingController();
-//   File? _selectedImage;
-//
-//   final ImagePicker _picker = ImagePicker();
-//
-//   Future<void> _pickImage() async {
-//     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-//     if (pickedFile != null) {
-//       setState(() {
-//         _selectedImage = File(pickedFile.path);
-//       });
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Thêm đơn vị vận chuyển'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             const Text(
-//               'Tên đơn vị',
-//               style: TextStyle(fontSize: 16),
-//             ),
-//             TextField(
-//               controller: _nameController,
-//               decoration: const InputDecoration(
-//                 hintText: 'Nhập tên đơn vị',
-//               ),
-//             ),
-//             const SizedBox(height: 16),
-//             const Text(
-//               'Trạng thái',
-//               style: TextStyle(fontSize: 16),
-//             ),
-//             TextField(
-//               controller: _statusController,
-//               decoration: const InputDecoration(
-//                 hintText: 'Nhập trạng thái',
-//               ),
-//             ),
-//             const SizedBox(height: 16),
-//             const Text(
-//               'Hình ảnh',
-//               style: TextStyle(fontSize: 16),
-//             ),
-//             GestureDetector(
-//               onTap: _pickImage,
-//               child: Container(
-//                 height: 150,
-//                 width: double.infinity,
-//                 color: Colors.grey[300],
-//                 child: _selectedImage != null
-//                     ? Image.file(_selectedImage!, fit: BoxFit.cover)
-//                     : const Center(child: Text('Chọn hình ảnh')),
-//               ),
-//             ),
-//             const SizedBox(height: 24),
-//             BlocConsumer<ShippingUnitBloc, ShippingUnitState>(
-//               listener: (context, state) {
-//                 if (state is ShippingUnitSuccess) {
-//                   ScaffoldMessenger.of(context).showSnackBar(
-//                     const SnackBar(content: Text('Thêm thành công!')),
-//                   );
-//                   Navigator.pop(context);
-//                 } else if (state is ShippingUnitError) {
-//                   ScaffoldMessenger.of(context).showSnackBar(
-//                     SnackBar(content: Text(state.message)),
-//                   );
-//                 }
-//               },
-//               builder: (context, state) {
-//                 if (state is ShippingUnitLoading) {
-//                   return const Center(child: CircularProgressIndicator());
-//                 }
-//                 return ElevatedButton(
-//                   onPressed: () {
-//                     final name = _nameController.text.trim();
-//                     final status = _statusController.text.trim();
-//                     if (name.isNotEmpty && status.isNotEmpty && _selectedImage != null) {
-//                       BlocProvider.of<ShippingUnitBloc>(context).add(
-//                         AddShippingUnitButtonPressed(
-//                           name: name,
-//                           status: status,
-//                           image: _selectedImage,
-//                         ),
-//                       );
-//                     } else {
-//                       ScaffoldMessenger.of(context).showSnackBar(
-//                         const SnackBar(
-//                           content: Text('Vui lòng nhập đầy đủ thông tin và chọn hình ảnh!'),
-//                         ),
-//                       );
-//                     }
-//                   },
-//                   child: const Text('Thêm'),
-//                 );
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

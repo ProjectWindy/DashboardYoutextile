@@ -5,7 +5,6 @@ import 'package:ipad_dashboard/blocs/user/user_state.dart';
 import 'package:ipad_dashboard/blocs/users/users_bloc.dart';
 import 'package:ipad_dashboard/core/assets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ipad_dashboard/pages/screens/user/user_details.dart';
 import 'package:ipad_dashboard/pages/screens/users/user_details_dialog.dart';
 import 'package:ipad_dashboard/services/restful_api_provider.dart';
 

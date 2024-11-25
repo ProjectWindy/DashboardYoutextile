@@ -28,8 +28,7 @@ class ServicePackagesBloc
     try {
       emit(ServicePackagesLoading());
 
-      // Get token from AuthBloc
-      var token = await TokenManager.getToken();
+       var token = await TokenManager.getToken();
 
       // Gán token mặc định nếu null
       token ??= '3|abJ70ndnOBiNoxMCKunklCkQZUUHgqXT8umVQ7xW908f9b79';
