@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ipad_dashboard/blocs/users/users_bloc.dart';
 import 'package:ipad_dashboard/core/assets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../blocs/users/users_event.dart';
+import '../../../blocs/users/users_state.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key}) : super(key: key);
@@ -9,6 +14,12 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<UsersBloc>().add(LoadUsers());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,71 +64,94 @@ class _UserScreenState extends State<UserScreen> {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: const Color(0xFFEEEEEE)),
                 ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    headingRowColor: MaterialStateColor.resolveWith(
-                      (states) => const Color(0xFFFAFAFA),
-                    ),
-                    dataRowHeight: 69,
-                    horizontalMargin: 30,
-                    columnSpacing: 100,
-                    columns: const [
-                      DataColumn(
-                          label: Text('STT',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold))),
-                      DataColumn(
-                          label: Text('Tên',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold))),
-                      DataColumn(
-                          label: Text('Email',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold))),
-                      DataColumn(
-                          label: Text('Avatar',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold))),
-                      DataColumn(
-                          label: Text('Tình Trạng',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold))),
-                      DataColumn(
-                          label: Text('Ngày Bắt Đầu',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold))),
-                      DataColumn(
-                          label: Text('Ngày Kết Thúc',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold))),
-                      DataColumn(
-                          label: Text('Gói',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold))),
-                      DataColumn(
-                          label: Text('Thao tác',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold))),
-                    ],
-                    rows: List.generate(
-                      7,
-                      (index) => DataRow(
-                        cells: [
-                          DataCell(Text('#123')),
-                          DataCell(Text('SangCaby')),
-                          DataCell(Text('Abc@gmail.com')),
-                          DataCell(_buildAvatar()),
-                          DataCell(
-                              Text(index == 1 ? 'Dùng thử 7 ngày' : 'Premium')),
-                          DataCell(Text('2024-01-10')),
-                          DataCell(Text('2024-01-10')),
-                          DataCell(Text('1.990.000 VND')),
-                          DataCell(_buildActions()),
-                        ],
-                      ),
-                    ),
-                  ),
+                child: BlocBuilder<UsersBloc, UsersState>(
+                  builder: (context, state) {
+                    if (state is UsersLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (state is UsersError) {
+                      return Center(child: Text(state.message));
+                    }
+
+                    if (state is UsersLoaded) {
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          headingRowColor: MaterialStateColor.resolveWith(
+                            (states) => const Color(0xFFFAFAFA),
+                          ),
+                          dataRowHeight: 69,
+                          horizontalMargin: 30,
+                          columnSpacing: 100,
+                          columns: const [
+                            DataColumn(
+                                label: Text('STT',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold))),
+                            DataColumn(
+                                label: Text('Tên',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold))),
+                            DataColumn(
+                                label: Text('Email',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold))),
+                            // DataColumn(
+                            //     label: Text('Avatar',
+                            //         style: TextStyle(
+                            //             fontSize: 14,
+                            //             fontWeight: FontWeight.bold))),
+                            DataColumn(
+                                label: Text('Tình Trạng',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold))),
+                            DataColumn(
+                                label: Text('Ngày Bắt Đầu',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold))),
+                            DataColumn(
+                                label: Text('Ngày Kết Thúc',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold))),
+                            DataColumn(
+                                label: Text('Gói',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold))),
+                            DataColumn(
+                                label: Text('Thao tác',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold))),
+                          ],
+                          rows: state.users.map((user) {
+                            return DataRow(
+                              cells: [
+                                DataCell(Text('#${user.uuid.substring(0, 4)}')),
+                                DataCell(Text(user.name)),
+                                DataCell(Text('${user.name}@gmail.com')),
+                                // DataCell(_buildAvatar(user.image)),
+                                DataCell(Text(user.status)),
+                                DataCell(Text('2024-01-10')),
+                                DataCell(Text('2024-01-10')),
+                                DataCell(Text('1.990.000 VND')),
+                                DataCell(_buildActions()),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    }
+
+                    return const SizedBox();
+                  },
                 ),
               ),
             ),
@@ -129,15 +163,16 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-  Widget _buildAvatar() {
+  Widget _buildAvatar([String? imageUrl]) {
     return Container(
       width: 59,
       height: 57,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         image: DecorationImage(
-          image: AssetImage(
-              Asset.bgImageAvatar), // Thay thế bằng đường dẫn ảnh của bạn
+          image: imageUrl != null
+              ? NetworkImage(imageUrl)
+              : AssetImage(Asset.bgImageAvatar) as ImageProvider,
           fit: BoxFit.cover,
         ),
       ),
