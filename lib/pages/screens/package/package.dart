@@ -4,6 +4,8 @@ import 'package:ipad_dashboard/blocs/service_packages/service_packages_bloc.dart
 import 'package:ipad_dashboard/blocs/service_packages/service_packages_state.dart';
 import 'package:ipad_dashboard/blocs/service_packages/service_packages_event.dart';
 import 'package:intl/intl.dart';
+import 'create_package_dialog.dart';
+import 'edit_package_dialog.dart';
 
 class PackageScreen extends StatefulWidget {
   const PackageScreen({Key? key}) : super(key: key);
@@ -73,7 +75,10 @@ class _PackageScreenState extends State<PackageScreen> {
                 icon: const Icon(Icons.add),
                 label: const Text("Thêm gói"),
                 onPressed: () {
-                  // Implement add package functionality
+                  showDialog(
+                    context: context,
+                    builder: (context) => CreatePackageDialog(),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -173,7 +178,32 @@ class _PackageScreenState extends State<PackageScreen> {
                             Text(state.packages[index].duration.toString())),
                         DataCell(
                             _buildStatusBadge(state.packages[index].status)),
-                        DataCell(_buildActions(state.packages[index].uuid)),
+                        DataCell(
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit_outlined,
+                                    size: 30, color: Colors.blue),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => EditPackageDialog(
+                                        package: state.packages[index]),
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete_outline,
+                                    size: 30, color: Colors.red[300]),
+                                onPressed: () {
+                                  _showDeleteConfirmation(
+                                      state.packages[index].uuid);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -183,6 +213,26 @@ class _PackageScreenState extends State<PackageScreen> {
           ),
           const SizedBox(height: 12),
           _buildPagination(),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.end,
+          //   children: [
+          //     ElevatedButton.icon(
+          //       icon: const Icon(Icons.add),
+          //       label: const Text('Tạo Gói Mới'),
+          //       onPressed: () {
+          //         showDialog(
+          //           context: context,
+          //           builder: (context) => CreatePackageDialog(),
+          //         );
+          //       },
+          //     ),
+          //     const SizedBox(width: 8),
+          //     IconButton(
+          //       icon: const Icon(Icons.filter_alt_outlined, color: Colors.blue),
+          //       onPressed: () {},
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -264,10 +314,16 @@ class _PackageScreenState extends State<PackageScreen> {
             ),
             TextButton(
               onPressed: () {
-                // context
-                //     .read<ServicePackagesBloc>()
-                //     .add(DeleteServicePackage(packageId));
-                // Navigator.of(context).pop();
+                context
+                    .read<ServicePackagesBloc>()
+                    .add(DeleteServicePackage(uuid: packageId));
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Đã xóa gói dịch vụ'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
               },
               child: const Text('Xóa'),
               style: TextButton.styleFrom(foregroundColor: Colors.red),

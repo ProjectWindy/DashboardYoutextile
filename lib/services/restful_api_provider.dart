@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ipad_dashboard/core/base_dio.dart';
- 
+
 import '../util/constants.dart';
 
 abstract class ApiPath {
@@ -95,8 +95,10 @@ abstract class ApiPath {
 
   // Thêm path mới cho service packages
   static const String servicePackages = 'admin/service-packages';
+  static const String postservicePackages = 'admin/service-package';
 
   static const String users = 'admin/users';
+  static const String usersdetails = 'admin/user';
 }
 
 class RestfulApiProviderImpl {
@@ -163,7 +165,7 @@ class RestfulApiProviderImpl {
   ///******************************************************************
   ///---------------------------GET-----------------------------------
   ///******************************************************************
-  
+
   Future postProductExtra({
     required String token,
     required String product_id,
@@ -254,7 +256,6 @@ class RestfulApiProviderImpl {
       rethrow;
     }
   }
- 
 
   Future<bool> sendShippingData(
       {String shippingUnit = 'Default Shipping Unit',
@@ -343,7 +344,7 @@ class RestfulApiProviderImpl {
       if (kDebugMode) {
         print('General Error: $error');
       }
-      throw 'Đã xảy ra lỗi không xác định khi gửi thông tin tài khoản ngân hàng';
+      throw 'Đã xảy ra lỗi khng xác định khi gửi thông tin tài khoản ngân hàng';
     }
   }
 
@@ -414,7 +415,8 @@ class RestfulApiProviderImpl {
     required String token,
   }) async {
     if (kDebugMode) {
-      print('Request URL: ${NetworkConstants.baseUrl}${ApiPath.servicePackages}');
+      print(
+          'Request URL: ${NetworkConstants.baseUrl}${ApiPath.servicePackages}');
     }
 
     try {
@@ -492,6 +494,121 @@ class RestfulApiProviderImpl {
     } catch (error) {
       if (kDebugMode) {
         print('Error getting users: $error');
+      }
+      rethrow;
+    }
+  }
+
+  Future<Response> createServicePackage({
+    required String token,
+    required Map<String, dynamic> packageData,
+  }) async {
+    try {
+      final response = await dioClient.post(
+        ApiPath.postservicePackages,
+        body: packageData,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response;
+      } else {
+        throw Exception(
+            response.data['message'] ?? 'Failed to create service package');
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error creating service package: $error');
+      }
+      rethrow;
+    }
+  }
+
+  Future<Response> updateServicePackage({
+    required String token,
+    required String uuid,
+    required Map<String, dynamic> packageData,
+  }) async {
+    try {
+      final response = await dioClient.put(
+        '${ApiPath.postservicePackages}/$uuid',
+        body: packageData,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response;
+      } else {
+        throw Exception(
+            response.data['message'] ?? 'Failed to update service package');
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error updating service package: $error');
+      }
+      rethrow;
+    }
+  }
+
+  Future<Response> deleteServicePackage({
+    required String token,
+    required String uuid,
+  }) async {
+    try {
+      final response = await dioClient.delete(
+        '${ApiPath.postservicePackages}/$uuid',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response;
+      } else {
+        throw Exception(
+            response.data['message'] ?? 'Failed to delete service package');
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error deleting service package: $error');
+      }
+      rethrow;
+    }
+  }
+
+  Future<Response> getUserDetails({
+    required String token,
+    required String uuid,
+  }) async {
+    try {
+      final response = await dioClient.get(
+        '${ApiPath.usersdetails}/$uuid',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        throw Exception(
+            response.data['message'] ?? 'Failed to get user details');
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error getting user details: $error');
       }
       rethrow;
     }

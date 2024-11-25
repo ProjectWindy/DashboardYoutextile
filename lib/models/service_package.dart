@@ -7,6 +7,7 @@ class ServicePackage {
   final String? discountPercentage;
   final int duration;
   final String status;
+  final bool isOption;
 
   ServicePackage({
     required this.uuid,
@@ -17,6 +18,7 @@ class ServicePackage {
     this.discountPercentage,
     required this.duration,
     required this.status,
+    this.isOption = false,
   });
 
   factory ServicePackage.fromJson(Map<String, dynamic> json) {
@@ -29,8 +31,21 @@ class ServicePackage {
       discountPercentage: json['discount_percentage'],
       duration: json['duration'] ?? 0,
       status: json['status'] ?? '',
+      isOption: json['isOption'] ?? false,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'uuid': uuid,
+    'name': name,
+    'short_description': shortDescription,
+    'original_price': originalPrice,
+    'discount_price': discountPrice,
+    'discount_percentage': discountPercentage,
+    'duration': duration,
+    'status': status,
+    'isOption': isOption,
+  };
 }
 
 class ServicePackageResponse {

@@ -16,6 +16,9 @@ class ServicePackagesBloc
   }) : super(ServicePackagesInitial()) {
     on<LoadServicePackages>(_onLoadServicePackages);
     on<RefreshServicePackages>(_onRefreshServicePackages);
+    on<CreateServicePackage>(_onCreateServicePackage);
+    on<UpdateServicePackage>(_onUpdateServicePackage);
+    on<DeleteServicePackage>(_onDeleteServicePackage);
   }
 
   Future<void> _onLoadServicePackages(
@@ -59,6 +62,102 @@ class ServicePackagesBloc
       add(LoadServicePackages());
     } catch (e) {
       emit(ServicePackagesError(e.toString()));
+    }
+  }
+
+  Future<void> _onCreateServicePackage(
+    CreateServicePackage event,
+    Emitter<ServicePackagesState> emit,
+  ) async {
+    try {
+      emit(ServicePackagesLoading());
+
+      var token = await TokenManager.getToken();
+      token ??= '3|abJ70ndnOBiNoxMCKunklCkQZUUHgqXT8umVQ7xW908f9b79';
+
+      final packageData = {
+        'name': event.name,
+        'short_description': event.shortDescription,
+        'description': event.description,
+        'original_price': event.originalPrice.toString(),
+        'duration': event.duration,
+        'is_option': event.isOption,
+      };
+
+      final response = await apiProvider.createServicePackage(
+        token: token,
+        packageData: packageData,
+      );
+
+      // Reload packages after creating new one
+      add(LoadServicePackages());
+
+      // Emit success state với message
+      emit(ServicePackagesSuccess(response.data['message']));
+    } catch (error) {
+      emit(ServicePackagesError(error.toString()));
+    }
+  }
+
+  Future<void> _onUpdateServicePackage(
+    UpdateServicePackage event,
+    Emitter<ServicePackagesState> emit,
+  ) async {
+    try {
+      emit(ServicePackagesLoading());
+
+      var token = await TokenManager.getToken();
+      token ??= '3|abJ70ndnOBiNoxMCKunklCkQZUUHgqXT8umVQ7xW908f9b79';
+
+      final packageData = {
+        'name': event.name,
+        'short_description': event.shortDescription,
+        'description': event.description,
+        'original_price': event.originalPrice.toString(),
+        'duration': event.duration,
+        'is_option': event.isOption,
+        'status': event.status,
+        'discount_price': (event.discountPrice ?? 0).toString(),
+      };
+
+      final response = await apiProvider.updateServicePackage(
+        token: token,
+        uuid: event.uuid,
+        packageData: packageData,
+      );
+
+      // Reload packages after updating
+      add(LoadServicePackages());
+
+      // Emit success state với message
+      emit(ServicePackagesSuccess(response.data['message']));
+    } catch (error) {
+      emit(ServicePackagesError(error.toString()));
+    }
+  }
+
+  Future<void> _onDeleteServicePackage(
+    DeleteServicePackage event,
+    Emitter<ServicePackagesState> emit,
+  ) async {
+    try {
+      emit(ServicePackagesLoading());
+
+      var token = await TokenManager.getToken();
+      token ??= '3|abJ70ndnOBiNoxMCKunklCkQZUUHgqXT8umVQ7xW908f9b79';
+
+      final response = await apiProvider.deleteServicePackage(
+        token: token,
+        uuid: event.uuid,
+      );
+
+      // Reload packages after deleting
+      add(LoadServicePackages());
+
+      // Emit success state với message
+      emit(ServicePackagesSuccess(response.data['message']));
+    } catch (error) {
+      emit(ServicePackagesError(error.toString()));
     }
   }
 }

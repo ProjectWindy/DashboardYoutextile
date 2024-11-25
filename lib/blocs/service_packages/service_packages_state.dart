@@ -28,4 +28,13 @@ class ServicePackagesError extends ServicePackagesState {
 
   @override
   List<Object> get props => [message];
+}
+
+class ServicePackagesSuccess extends ServicePackagesState {
+  final String message;
+  
+  ServicePackagesSuccess(this.message);
+  
+  @override
+  List<Object> get props => [message];
 } 
