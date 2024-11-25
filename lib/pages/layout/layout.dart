@@ -104,7 +104,6 @@ class _AppLayoutState extends State<AppLayout> {
       ),
       child: Column(
         children: [
-          // Logo and toggle button
           Container(
             padding: const EdgeInsets.symmetric(vertical: 20),
             decoration: BoxDecoration(
@@ -218,13 +217,13 @@ class _AppLayoutState extends State<AppLayout> {
                   top: BorderSide(color: dividerColor),
                 ),
               ),
-              child: Row(
+              child: const Row(
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 18,
                     backgroundImage: AssetImage(Asset.bgImageAvatar),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +232,7 @@ class _AppLayoutState extends State<AppLayout> {
                         Text(
                           'Welcome back 👋',
                           style: TextStyle(
-                            color: const Color(0xFF6B7280),
+                            color: Color(0xFF6B7280),
                             fontSize: 13,
                             height: 1.4,
                           ),
@@ -241,7 +240,7 @@ class _AppLayoutState extends State<AppLayout> {
                         Text(
                           'Johnathan',
                           style: TextStyle(
-                            color: const Color(0xFF111827),
+                            color: Color(0xFF111827),
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             height: 1.4,
@@ -252,7 +251,7 @@ class _AppLayoutState extends State<AppLayout> {
                   ),
                   Icon(
                     Icons.chevron_right,
-                    color: const Color(0xFF6B7280),
+                    color: Color(0xFF6B7280),
                     size: 20,
                   ),
                 ],
@@ -283,6 +282,7 @@ class _AppLayoutState extends State<AppLayout> {
           PackageScreen(),
           ShipScreen(),
           NotificationScreen(),
+
           SettingsPage(),
         ],
       ),
