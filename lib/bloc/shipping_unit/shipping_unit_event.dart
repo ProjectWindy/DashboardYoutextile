@@ -6,22 +6,43 @@ sealed class ShippingUnitEvent {}
 class FetchShippingUnitEvent extends ShippingUnitEvent {}
 
 class AddShippingUnitButtonPressed extends ShippingUnitEvent {
-  final MultipartFile image;
   final String name;
   final String status;
+  final String description;
+  final MultipartFile image;
 
-  AddShippingUnitButtonPressed({required this.image, required this.name,required this.status});
+  AddShippingUnitButtonPressed({
+    required this.name,
+    required this.status,
+    required this.description,
+    required this.image,
+  });
 }
+
 class UpdateShippingUnitButtonPressed extends ShippingUnitEvent {
   final String uuid;
   final MultipartFile image;
   final String name;
   final String status;
 
-  UpdateShippingUnitButtonPressed({required this.uuid,required this.image, required this.name,required this.status});
+  UpdateShippingUnitButtonPressed(
+      {required this.uuid,
+      required this.image,
+      required this.name,
+      required this.status});
 }
+
 class DeleteShippingUnitButtonPressed extends ShippingUnitEvent {
   final String uuid;
 
   DeleteShippingUnitButtonPressed({required this.uuid});
+}
+
+class DeleteShippingUnitEvent extends ShippingUnitEvent {
+  final String uuid;
+
+  DeleteShippingUnitEvent({required this.uuid});
+
+  @override
+  List<Object> get props => [uuid];
 }

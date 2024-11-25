@@ -47,7 +47,7 @@ class _AppLayoutState extends State<AppLayout> {
     ),
     MenuOption(
       title: "Package",
-      icon: Icons.person_outline,
+      icon: Icons.card_membership,
       isHeader: false,
     ),
     MenuOption(
@@ -159,11 +159,15 @@ class _AppLayoutState extends State<AppLayout> {
                         : Colors.transparent,
                   ),
                   child: ListTile(
-                    leading: Icon(
-                      item.icon,
-                      color:
-                          isSelected ? primaryPurple : const Color(0xFF6B7280),
-                      size: 24,
+                    leading: SizedBox(
+                      width: 24,
+                      child: Icon(
+                        item.icon,
+                        color: isSelected
+                            ? primaryPurple
+                            : const Color(0xFF6B7280),
+                        size: 24,
+                      ),
                     ),
                     title: _isExpanded
                         ? Text(
@@ -282,7 +286,6 @@ class _AppLayoutState extends State<AppLayout> {
           PackageScreen(),
           ShipScreen(),
           NotificationScreen(),
-
           SettingsPage(),
         ],
       ),

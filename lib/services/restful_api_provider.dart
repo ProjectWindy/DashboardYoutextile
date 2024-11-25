@@ -4,8 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ipad_dashboard/core/base_dio.dart';
 
-
-import '../core/base/base_dio.dart';
 import '../models/ShippingUnit.dart';
 import '../util/constants.dart';
 
@@ -42,9 +40,6 @@ abstract class ApiPath {
 
   static String buyerGetProductDetail(uuid) => 'buyer/product/$uuid';
   static String buyerGetProductStore(uuid) => 'buyer/store/$uuid/products';
-
-  static String addCart(uuid) => 'buyer/product/$uuid/add-cart';
-  static String deleteCart(id) => 'buyer/cart/item/$id';
 
   ///*******************************ALL***********************************
   ///*******************************POST***********************************
@@ -566,25 +561,38 @@ class RestfulApiProviderImpl {
       if (kDebugMode) {
         print('Error updating service package: $error');
       }
-
-  Future<List<ShippingUnit>> fetchShippingUnits({required String token}) async {
-    final response = await dioClient.get(
-      ApiPath.shippingUnits,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-    if (response.statusCode == 200) {
-      return (response.data['shipping_units'] as List)
-          .map((unit) => ShippingUnit.fromJson(unit))
-          .toList();
-    } else {
-      throw Exception('Failed to fetch shipping units');
+      rethrow;
     }
   }
 
-  Future<void> addShippingUnit({required MultipartFile img,required String name,required String status} ) async {
+  Future<List<ShippingUnit>> fetchShippingUnits({required String token}) async {
+    try {
+      final response = await dioClient.get(
+        ApiPath.shippingUnits,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final List<dynamic> shippingUnitsJson = data['shipping_units'];
+        return shippingUnitsJson
+            .map((json) => ShippingUnit.fromJson(json))
+            .toList();
+      }
+      throw Exception('Failed to fetch shipping units');
+    } on DioException catch (e) {
+      _handleDioError(e);
+      rethrow;
+    }
+  }
+
+  Future<void> addShippingUnit(
+      {required MultipartFile img,
+      required String name,
+      required String status}) async {
     try {
       final formData = FormData.fromMap({
         "image": img,
@@ -604,8 +612,13 @@ class RestfulApiProviderImpl {
       rethrow;
     }
   }
+
   /// Sửa đơn vị vận chuyển
-  Future<void> updateShippingUnit({required String uuid,required MultipartFile img,required String name,required String status}) async {
+  Future<void> updateShippingUnit(
+      {required String uuid,
+      required MultipartFile img,
+      required String name,
+      required String status}) async {
     try {
       final formData = FormData.fromMap({
         "image": img,
@@ -649,15 +662,25 @@ class RestfulApiProviderImpl {
       if (kDebugMode) {
         print('Error deleting service package: $error');
       }
-=======
-  /// Xóa đơn vị vận chuyển
-  Future<void> deleteShippingUnit({required String uuid}) async {
+      rethrow;
+    }
+  }
+
+  Future<void> deleteShippingUnit(
+      {required String uuid, required String token}) async {
     try {
-      final response = await dioClient.delete(ApiPath.shippingUnitsUpdate(uuid));
+      final response = await dioClient.delete(
+        ApiPath.shippingUnitsUpdate(uuid),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
       if (response.statusCode != 200) {
         throw Exception('Failed to delete shipping unit');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       _handleDioError(e);
       rethrow;
     }
@@ -688,9 +711,10 @@ class RestfulApiProviderImpl {
         print('Error getting user details: $error');
       }
       rethrow;
+    }
+  }
 
-  /// Xử lý lỗi từ Dio
-  void _handleDioError(DioError e) {
+  void _handleDioError(DioException e) {
     if (e.response != null) {
       print('Dio Error [${e.response?.statusCode}]: ${e.response?.data}');
     } else {

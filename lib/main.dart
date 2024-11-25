@@ -32,15 +32,15 @@ void main() {
               apiProvider: context.read<RestfulApiProviderImpl>(),
             ),
           ),
-            BlocProvider(
-          create: (_) => ShippingUnitBloc(),
-        ),
+          BlocProvider(
+            create: (context) => ShippingUnitBloc(
+              apiProvider: context.read<RestfulApiProviderImpl>(),
+            ),
+          ),
         ],
         child: const MyApp(),
       ),
     );
- 
-
   });
   // runApp(const MyApp());
 }
