@@ -27,7 +27,9 @@ class SettingsPage extends StatelessWidget {
                 Spacer(),
                 IconButton(
                   icon: const Icon(Icons.add_box_sharp, color: Colors.blue),
-                  onPressed: () {},
+                  onPressed: () {
+                    _showAddAdminDialog(context);
+                  },
                 ),
                 IconButton(
                   icon:
