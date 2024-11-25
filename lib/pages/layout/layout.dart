@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ipad_dashboard/core/assets.dart';
 import 'package:ipad_dashboard/pages/screens/home_mail/home_screen.dart';
 import 'package:ipad_dashboard/pages/screens/noftification/notification.dart';
+import 'package:ipad_dashboard/pages/screens/package/package.dart';
 import 'package:ipad_dashboard/pages/screens/product/product_screen.dart';
 import 'package:ipad_dashboard/pages/screens/product_category/product_category_screen.dart';
 import 'package:ipad_dashboard/pages/screens/settings/settings.dart';
@@ -41,6 +42,11 @@ class _AppLayoutState extends State<AppLayout> {
     ),
     MenuOption(
       title: "Users",
+      icon: Icons.person_outline,
+      isHeader: false,
+    ),
+    MenuOption(
+      title: "Package",
       icon: Icons.person_outline,
       isHeader: false,
     ),
@@ -269,12 +275,14 @@ class _AppLayoutState extends State<AppLayout> {
       child: IndexedStack(
         index: _selectedIndex,
         children: [
-          const DashboardHome(),
-          const ProductCategoryScreen(),
-          const ProductScreen(),
-          const UserScreen(),
-          const ShipScreen(),
-          const NotificationScreen(),
+          DashboardHome(),
+          ProductCategoryScreen(),
+          ProductScreen(),
+          UserScreen(),
+          PackageScreen(),
+          ShipScreen(),
+          NotificationScreen(),
+
           SettingsPage(),
         ],
       ),

@@ -3,9 +3,15 @@ import 'package:flutter/cupertino.dart';
 class NetworkConstants {
   NetworkConstants._();
   static const String baseUrl =
+      //server testing
       "http://api.youtextile.info/api/v1/";
+  //server testing image storage
 
-  static const String urlImage = 'http://api.youtextile.info/storage/';
+  static const String STORAGE_URL = 'http://api.youtextile.info/storage/';
+
+  static const String urlImage =
+      //server testing
+      "https://duclh.id.vn/storage/";
 
   static const Duration receiveTimeout = Duration(milliseconds: 5000);
 
