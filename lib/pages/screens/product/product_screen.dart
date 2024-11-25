@@ -206,7 +206,7 @@ class _ProductScreenState extends State<ProductScreen>
         IconButton(
           icon: const Icon(
             Icons.edit_outlined,
-            size: 18,
+            size: 30,
             color: Colors.blue,
           ),
           onPressed: () {},
@@ -214,7 +214,7 @@ class _ProductScreenState extends State<ProductScreen>
         IconButton(
           icon: Icon(
             Icons.delete_outline,
-            size: 18,
+            size: 30,
             color: Colors.red[300],
           ),
           onPressed: () {},
@@ -341,7 +341,7 @@ void _showAddAdminDialog(BuildContext context) {
                     ),
                   ),
                   child: const Text(
-                    'Thêm Admin',
+                    'Thêm Sản phẩm',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
